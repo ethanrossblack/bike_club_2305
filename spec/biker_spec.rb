@@ -16,5 +16,14 @@ describe Biker do
       expect(@biker.name).to eq "Kenny"
       expect(@biker.max_distance).to eq 30
     end
+
+    it "starts with no rides" do
+      expect(@biker.rides).to eq({})
+
+    end
+
+    it "starts with no accpetable terrain" do
+      expect(@biker.acceptable_terrain).to eq([])
+    end
   end
 end
