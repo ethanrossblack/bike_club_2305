@@ -104,6 +104,29 @@ describe Biker do
       expect(ethan.rides).to eq({})
     end
   end
+
+  describe "helper methods" do
+
+    describe "#acceptable_terrain?" do
+      it "validates if a biker can bike a certain terrain" do
+        expect(@biker.acceptable_terrain?(:hills)).to be false
+        
+        @biker.learn_terrain!(:hills)
+        
+        expect(@biker.acceptable_terrain?(:hills)).to be true
+      end
+    end
+
+    describe "#bikeable_distance?" do
+      it "validates if a distance is within a biker's range" do
+        expect(@biker.max_distance).to eq 30
+
+        expect(@biker.bikeable_distance?(29.5)).to be true
+        expect(@biker.bikeable_distance?(30)).to be true
+        expect(@biker.bikeable_distance?(30.1)).to be false
+      end
+    end
+  end
 end
 
 
