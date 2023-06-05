@@ -11,5 +11,10 @@ describe Biker do
     it "exists" do
       expect(@biker).to be_a Biker
     end
+
+    it "has readable attributes" do
+      expect(@biker.name).to eq "Kenny"
+      expect(@biker.max_distance).to eq 30
+    end
   end
 end
