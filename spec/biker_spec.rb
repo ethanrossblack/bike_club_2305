@@ -3,11 +3,13 @@ require "./lib/ride"
 require "./lib/biker"
 
 describe Biker do
+
   before :each do
     @biker = Biker.new("Kenny", 30)
   end
 
   describe "#initialize" do
+
     it "exists" do
       expect(@biker).to be_a Biker
     end
@@ -25,9 +27,11 @@ describe Biker do
     it "starts with no accpetable terrain" do
       expect(@biker.acceptable_terrain).to eq([])
     end
+
   end
 
   describe "#learn_terrain!" do
+
     it "can learn terrain" do
       @biker.learn_terrain!(:gravel)
       @biker.learn_terrain!(:hills)
@@ -44,9 +48,11 @@ describe Biker do
       
       expect(@biker.acceptable_terrain).to eq [:gravel]
     end
+
   end
 
   describe "#log_ride" do
+
     before :each do
       @biker.learn_terrain!(:hills)
       @biker.learn_terrain!(:gravel)
@@ -103,11 +109,39 @@ describe Biker do
 
       expect(ethan.rides).to eq({})
     end
+
+  end
+
+  describe "#personal_record" do
+
+    before :each do
+      @biker.learn_terrain!(:hills)
+      @biker.learn_terrain!(:gravel)
+      
+      @ride1 = Ride.new({name: "Walnut Creek Trail", distance: 10.7, loop: false, terrain: :hills})
+      @ride2 = Ride.new({name: "Town Lake", distance: 14.9, loop: true, terrain: :gravel})
+    end
+
+    it "can report its personal record for a specific ride" do
+      @biker.log_ride(@ride1, 92.5)
+      @biker.log_ride(@ride1, 91.1)
+      @biker.log_ride(@ride2, 60.9)
+      @biker.log_ride(@ride2, 61.6)
+
+      expect(@biker.personal_record(@ride1)).to eq 91.1
+      expect(@biker.personal_record(@ride2)).to eq 60.9
+    end
+
+    it "returns false if asked for a personal record of a ride it hasn't completed" do
+      expect(@biker.personal_record(@ride1)).to be false
+    end
+
   end
 
   describe "helper methods" do
 
     describe "#acceptable_terrain?" do
+
       it "validates if a biker can bike a certain terrain" do
         expect(@biker.acceptable_terrain?(:hills)).to be false
         
@@ -115,9 +149,11 @@ describe Biker do
         
         expect(@biker.acceptable_terrain?(:hills)).to be true
       end
+
     end
 
     describe "#bikeable_distance?" do
+
       it "validates if a distance is within a biker's range" do
         expect(@biker.max_distance).to eq 30
 
@@ -125,8 +161,11 @@ describe Biker do
         expect(@biker.bikeable_distance?(30)).to be true
         expect(@biker.bikeable_distance?(30.1)).to be false
       end
+
     end
+
   end
+
 end
 
 

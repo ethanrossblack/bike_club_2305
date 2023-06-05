@@ -30,4 +30,8 @@ class Biker
   def bikeable_distance?(distance)
     max_distance >= distance
   end
+
+  def personal_record(ride)
+    rides.has_key?(ride) ? rides[ride].min : false
+  end
 end
