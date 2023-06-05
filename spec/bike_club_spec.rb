@@ -49,4 +49,41 @@ describe BikeClub do
   
   end
 
+  describe "#most_rides" do
+
+    before :each do
+      @ethan = Biker.new("Ethan", 100)
+      @zahava = Biker.new("Zahava", 101)
+
+      @ride1 = Ride.new({name: "Walnut Creek Trail", distance: 10.7, loop: false, terrain: :hills})
+      @ride2 = Ride.new({name: "Town Lake", distance: 14.9, loop: true, terrain: :gravel})
+      @splash_mountain = Ride.new({name: "Splash Mountain", distance: 4.9, loop: true, terrain: :log_ride})
+
+      @ethan.learn_terrain!(:gravel)
+      @ethan.learn_terrain!(:hills)
+      @ethan.learn_terrain!(:log_ride)
+      @zahava.learn_terrain!(:gravel)
+      @zahava.learn_terrain!(:hills)
+
+      @ethan.log_ride(@ride1, 92.5)
+      @zahava.log_ride(@ride1, 91.1)
+      @ethan.log_ride(@ride2, 60.9)
+      @zahava.log_ride(@ride2, 61.6)
+      @ethan.log_ride(@splash_mountain, 50.1)
+    end
+
+    it "can tell us which Biker has logged the most rides" do
+      expect(@ethan.rides.length).to eq 3
+      expect(@zahava.rides.length).to eq 2
+
+      @bike_club.add_biker(@zahava)
+
+      expect(@bike_club.most_rides).to eq @zahava
+
+      @bike_club.add_biker(@ethan)
+
+      expect(@bike_club.most_rides).to eq @ethan
+    end
+
+  end
 end
