@@ -5,9 +5,6 @@ require "./lib/biker"
 describe Biker do
   before :each do
     @biker = Biker.new("Kenny", 30)
-
-    @ride1 = ride1 = Ride.new({name: "Walnut Creek Trail", distance: 10.7, loop: false, terrain: :hills})
-    @ride2 = Ride.new({name: "Town Lake", distance: 14.9, loop: true, terrain: :gravel})
   end
 
   describe "#initialize" do
@@ -50,6 +47,14 @@ describe Biker do
   end
 
   describe "#log_ride" do
+    before :each do
+      @biker.learn_terrain!(:hills)
+      @biker.learn_terrain!(:gravel)
+      
+      @ride1 = Ride.new({name: "Walnut Creek Trail", distance: 10.7, loop: false, terrain: :hills})
+      @ride2 = Ride.new({name: "Town Lake", distance: 14.9, loop: true, terrain: :gravel})
+    end
+
     it "can log a ride" do
       @biker.log_ride(@ride1, 92.5)
 
@@ -60,13 +65,43 @@ describe Biker do
       expect(@biker.rides).to eq({@ride1 => [92.5], @ride2 => [60.9]})
     end
     
-    it "can keep track of all previous times for each ride" do
+    it "can keep track of all previous times for each ride" do      
       @biker.log_ride(@ride1, 92.5)
       @biker.log_ride(@ride1, 91.1)
       @biker.log_ride(@ride2, 60.9)
       @biker.log_ride(@ride2, 61.6)
 
       expect(@biker.rides).to eq({@ride1 => [92.5, 91.1], @ride2 => [60.9, 61.6]})
+    end
+
+    it "can only log rides on terrain the biker knows" do
+      athena = Biker.new("Athena", 15)
+      splash_mountain = Ride.new({name: "Splash Mountain", distance: 4.9, loop: false, terrain: :log_ride})
+
+      expect(athena.acceptable_terrain).to eq([])
+
+      athena.log_ride(splash_mountain, 10.1)
+
+      expect(athena.rides).to eq({})
+
+      athena.learn_terrain!(:log_ride)
+      athena.log_ride(splash_mountain, 10.1)
+
+      expect(athena.rides).to eq({splash_mountain => [10.1]})
+    end
+
+    it "can only log rides with a total distance less than or equal to than their max distance" do
+      ethan = Biker.new("Ethan", 10.1)
+      ethan.learn_terrain!(:log_ride)
+      splash_chute = Ride.new({name: "Splash Chute", distance: 5.1, loop: false, terrain: :log_ride})
+
+      expect(ethan.max_distance).to eq 10.1
+      expect(splash_chute.total_distance).to eq 10.2
+      expect(ethan.rides).to eq({})
+
+      ethan.log_ride(splash_chute, 56.7)
+
+      expect(ethan.rides).to eq({})
     end
   end
 end
