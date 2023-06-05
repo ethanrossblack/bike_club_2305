@@ -164,6 +164,33 @@ describe Biker do
 
     end
 
+    describe "#count_rides" do
+     
+      before :each do
+        @biker.learn_terrain!(:hills)
+        @biker.learn_terrain!(:gravel)
+        
+        @ride1 = Ride.new({name: "Walnut Creek Trail", distance: 10.7, loop: false, terrain: :hills})
+        @ride2 = Ride.new({name: "Town Lake", distance: 14.9, loop: true, terrain: :gravel})
+      end
+      
+      it "can count the number of rides a Biker has taken" do
+        expect(@biker.count_rides).to eq 0
+        
+        @biker.log_ride(@ride1, 92.5)
+        
+        expect(@biker.count_rides).to eq 1
+        
+        @biker.log_ride(@ride1, 91.1)
+        @biker.log_ride(@ride2, 60.9)
+        @biker.log_ride(@ride2, 61.6)
+        
+        expect(@biker.count_rides).to eq 4
+      end
+    
+    end
+
+
   end
 
 end
