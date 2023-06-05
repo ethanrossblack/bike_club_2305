@@ -34,4 +34,12 @@ class Biker
   def personal_record(ride)
     rides.has_key?(ride) ? rides[ride].min : false
   end
+
+  def count_rides
+    ride_count = 0
+    rides.values.each do |ride_times|
+      ride_count += ride_times.length
+    end
+    ride_count
+  end
 end
